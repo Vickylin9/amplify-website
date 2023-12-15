@@ -1,9 +1,10 @@
-import { CreateNote, NavBar, NoteUICollection, UpdateNote } from './ui-components'
+import { NavBar, NoteUICollection, UpdateNote } from './ui-components'
 import { NoteCreateForm, NoteUpdateForm} from './ui-components'
-
+import {DataStore} from 'aws-amplify/datastore'
 import { useState } from 'react'
 import { withAuthenticator } from '@aws-amplify/ui-react'
-
+import {Note} from './models'
+  console.log(Note);
 function App ({ signOut }) {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [showUpdateModal, setShowUpdateModal] = useState(false)
@@ -17,6 +18,7 @@ function App ({ signOut }) {
           Button31632487: {
             onClick: async () => {
               signOut()
+              await DataStore.clear()
             }
           }
         }}
@@ -31,13 +33,16 @@ function App ({ signOut }) {
                   setShowUpdateModal(true)
                   setUpdateNote(item)
                 }
+              },
+              MyIcon:{
+                as: 'button'
               }
             }
-          }
-        }}
+        }}}
         />
       </div>
-      <div className='modal' style={{ display: showCreateModal === false && 'none' }}>
+      <div className='modal' style={{ display: showCreateModal ? 'block' : 'none' }}
+>
         <NoteCreateForm overrides={{
         SubmitButton: {
           as: 'button',
